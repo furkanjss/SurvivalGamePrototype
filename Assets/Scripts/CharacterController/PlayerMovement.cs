@@ -16,12 +16,13 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private Vector3 direction;
-    private float mouseX;
-    private float rotationY;
+   
+   
     private bool isGrounded;
 
     public bool IsGrounded => isGrounded;
-    public float SpeedPercent => direction.magnitude;
+    public float verticalInput => Input.GetAxis("Vertical");
+    public float horizontalInput => Input.GetAxis("Horizontal");
     public bool IsRunning { get; private set; }
 
     public event Action OnJump;
@@ -51,8 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+      
         direction = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
         if (direction.magnitude >= 0.1f)
@@ -60,12 +60,11 @@ public class PlayerMovement : MonoBehaviour
             
             Vector3 moveDirection = transform.TransformDirection(direction);
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-        
-           
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
 
             IsRunning = Input.GetKey(KeyCode.LeftShift);
             float speed = IsRunning ? runSpeed : walkSpeed;
+            print(speed);
             rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
         }
         else

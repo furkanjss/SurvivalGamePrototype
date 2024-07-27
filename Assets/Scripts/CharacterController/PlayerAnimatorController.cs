@@ -32,16 +32,16 @@ public class PlayerAnimatorController : MonoBehaviour
         playerMovement.OnJump -= HandleJump;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         UpdateAnimator();
     }
 
     private void UpdateAnimator()
     {
-        animator.SetFloat("speed", playerMovement.SpeedPercent);
         animator.SetBool("IsRunning", playerMovement.IsRunning);
-      
+        animator.SetFloat("horizontal",playerMovement.horizontalInput);
+        animator.SetFloat("vertical",playerMovement.verticalInput);
     }
 
     private void HandleJump()
