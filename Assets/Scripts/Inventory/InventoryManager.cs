@@ -11,6 +11,8 @@ public class InventoryManager : MonoBehaviour
     public List<ItemSlot> slots = new List<ItemSlot>();
     
     public static Action<BaseItem> OnPickUpItem;
+    public static Action OnResourceFinish;
+   
     public static Action<List<ItemSlot>> OnInventoryChanged;
     private void Awake()
     {
@@ -64,7 +66,7 @@ public class InventoryManager : MonoBehaviour
     }
 
   
-    public void UseSelectedItem(BaseItem selectedItem)
+    public void UseSelectedItem(BaseItem selectedItem,ItemSlot slot)
     {
         if (selectedItem == null)
         {
@@ -76,7 +78,13 @@ public class InventoryManager : MonoBehaviour
         {
             case BaseItem.ItemType.Tool:
                 ToolItem tool= selectedItem as ToolItem;
-                PlayerInventory.OnSetNewTool?.Invoke(tool.toolPrefab);
+                PlayerInventory.OnSetNewTool?.Invoke(tool.toolPrefab,tool.damage);
+                GameManager.instance.ChangeStatus(GameStatus.Combat);
+                break;  
+            case BaseItem.ItemType.Resource:
+                ResourceItem resource= selectedItem as ResourceItem;
+                BuildController.OnResourceChoice?.Invoke(resource.objectPrefab,resource.previewObject,slot);
+                GameManager.instance.ChangeStatus(GameStatus.Building);
                 break;
             case BaseItem.ItemType.Food:
          
@@ -99,5 +107,13 @@ public class InventoryManager : MonoBehaviour
         SurvivalManager.OnFoodEaten?.Invoke(food.effect);
         RemoveItem(food, 1);
         OnInventoryChanged?.Invoke(slots);
+    } public void UseResource(ResourceItem resource)
+    {
+     
+        RemoveItem(resource, 1);
+        OnInventoryChanged?.Invoke(slots);
+        
     }
+
+   
 }

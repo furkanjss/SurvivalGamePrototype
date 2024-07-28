@@ -10,15 +10,17 @@ public class InventorySlotUI : MonoBehaviour
     private Button button;
     private TextMeshProUGUI itemName;
     private TextMeshProUGUI amountText;
-
+    private ItemSlot holdItemSlot;
     void Initialize()
     {
         icon = GetComponent<Image>();
         button = GetComponent<Button>();
         itemName = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         amountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        
+       
 
-        button.onClick.AddListener(ChoiceThis);
+        button.onClick.AddListener(ChooseThisItem);
     }
     public void SetSlot(ItemSlot slot)
     {
@@ -27,19 +29,25 @@ public class InventorySlotUI : MonoBehaviour
             Initialize();
         }
 
+        holdItemSlot = slot;
         Item = slot.item;
         icon.sprite = Item.icon;
         itemName.text = Item.itemName;
         amountText.text = slot.amount.ToString();
     }
 
-    void ChoiceThis()
+    void ChooseThisItem()
     {
         if (Item.itemType == BaseItem.ItemType.Tool)
         {
             icon.color=Color.green;
         }
-        InventoryManager.Instance.UseSelectedItem(Item);
+        InventoryManager.Instance.UseSelectedItem(Item,holdItemSlot);
+    }
+
+    public void IsHotkeySlot()
+    {
+        transform.localScale = new Vector3(2, 2, 2);
     }
     
 }

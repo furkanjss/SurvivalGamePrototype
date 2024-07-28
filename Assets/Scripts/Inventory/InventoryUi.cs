@@ -8,24 +8,31 @@ public class InventoryUI : MonoBehaviour
 {
     [SerializeField] private InventorySlotUI slotPrefab;
     [SerializeField] private Transform panelParent;
+    [SerializeField] private int maxSlotCount;
     private InventoryManager _playerInventoryManager;
-
-    private List<InventorySlotUI> slotsUI = new List<InventorySlotUI>();
+    private GameObject inventoryPanel;
+    [HideInInspector]
+    public List<InventorySlotUI> slotsUI = new List<InventorySlotUI>();
+   
 
     private void Start()
     {
+        inventoryPanel = transform.GetChild(0).gameObject;
         _playerInventoryManager = InventoryManager.Instance;
     }
 
     private void OnEnable()
     {
         InventoryManager.OnInventoryChanged += UpdateUI;
+        GameManager.OnInventoryPanelOpen += ToggleInventoryPanel;
     }  private void OnDisable()
     {
         InventoryManager.OnInventoryChanged -= UpdateUI;
+        GameManager. OnInventoryPanelOpen -= ToggleInventoryPanel;
+
     }
 
-    public void UpdateUI(List<ItemSlot> slots)
+    public void ClearSlots()
     {
         foreach (Transform child in panelParent)
         {
@@ -33,13 +40,24 @@ public class InventoryUI : MonoBehaviour
         }
 
         slotsUI.Clear();
+    }
+    public virtual void UpdateUI(List<ItemSlot> slots)
+    {
+        ClearSlots();
 
-        foreach (ItemSlot slot in slots)
+        int slotCount = Mathf.Min(slots.Count, maxSlotCount); 
+        for (int i = 0; i < slotCount; i++)
         {
             InventorySlotUI slotUI = Instantiate(slotPrefab, panelParent);
-            slotUI.SetSlot(slot);
+            slotUI.SetSlot(slots[i]);
             slotsUI.Add(slotUI);
         }
+    }
+
+    void ToggleInventoryPanel()
+    {
+        inventoryPanel.SetActive(!inventoryPanel.activeSelf);
+
     }
 }
 

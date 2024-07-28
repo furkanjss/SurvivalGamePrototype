@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 public class Item : MonoBehaviour,ICollectable
 {
-  [FormerlySerializedAs("sOitem")] [FormerlySerializedAs("inventoryItem")] public BaseItem baseItem;
+  public BaseItem baseItem;
 
   public BaseItem GetItem()
   {

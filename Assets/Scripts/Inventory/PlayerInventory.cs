@@ -6,8 +6,8 @@ using UnityEngine.Serialization;
 public class PlayerInventory : MonoBehaviour
 {
     [SerializeField] private Transform handRigParent;
-    private GameObject currentTool;
-    public static Action<GameObject> OnSetNewTool;
+    public GameObject currentTool;
+    public static Action<GameObject,float> OnSetNewTool;
     private void OnTriggerEnter(Collider other)
     {
         ICollectable collectable = other.GetComponent<ICollectable>();
@@ -19,7 +19,7 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public void SetNewTool(GameObject toolPrefab)
+    public void SetNewTool(GameObject toolPrefab,float _Tooldamage)
     {
         if (currentTool!=null)
         {
@@ -28,9 +28,12 @@ public class PlayerInventory : MonoBehaviour
         }
 
         currentTool = Instantiate(toolPrefab, handRigParent);
+            Destroy(currentTool.GetComponent<Item>());
         currentTool.transform.localScale = new Vector3(2, 2, 2);
         currentTool.transform.localPosition=Vector3.zero;
         currentTool.transform.localEulerAngles=Vector3.zero;
+        currentTool.AddComponent<GunCollisionManager>();
+        currentTool.GetComponent<GunCollisionManager>().damage = _Tooldamage;
     }
 
     private void OnEnable()
