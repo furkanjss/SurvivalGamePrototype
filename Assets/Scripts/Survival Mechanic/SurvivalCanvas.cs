@@ -20,11 +20,12 @@ public class SurvivalCanvas : MonoBehaviour
     [SerializeField] private TextMeshProUGUI thirstPopUp;
     [SerializeField] private TextMeshProUGUI healthPopUp;
 
-    public void SetSlidersValue(float hungerPercentage,float thirstPercentage)
+    public void SetSlidersValue(float hungerPercentage,float thirstPercentage,float healthPercentage)
     {
         
         hungerSlider.fillAmount = hungerPercentage;
         thirstSlider.fillAmount = thirstPercentage;
+        healthSlider.fillAmount = healthPercentage;
     }
 
     private void OnEnable()

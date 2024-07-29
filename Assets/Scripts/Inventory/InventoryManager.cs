@@ -73,7 +73,7 @@ public class InventoryManager : MonoBehaviour
             Debug.Log("No item selected.");
             return;
         }
-
+print(selectedItem.itemType);
         switch (selectedItem.itemType)
         {
             case BaseItem.ItemType.Tool:
@@ -91,20 +91,38 @@ public class InventoryManager : MonoBehaviour
                 FoodItem food = selectedItem as FoodItem;
                 if (food != null)
                 {
-                    EatFood(food);
+                    
+                    EatFood(food,selectedItem.itemType);
                 }
-                else
+               
+                break; 
+            case BaseItem.ItemType.Drink:
+         
+                FoodItem drink = selectedItem as FoodItem;
+                if (drink != null)
                 {
-                    Debug.Log("Selected item is not a FoodItem.");
+                    
+                    EatFood(drink,selectedItem.itemType);
                 }
+             
                 break;
          
         }
     }
 
-    private void EatFood(FoodItem food)
+    private void EatFood(FoodItem food,BaseItem.ItemType itemType)
     {
-        SurvivalManager.OnFoodEaten?.Invoke(food.effect);
+        if (itemType==BaseItem.ItemType.Food)
+        {
+            SurvivalManager.OnFoodEaten?.Invoke(food.effect);
+        }
+        else
+        {
+            print("sss");
+            SurvivalManager.OnWaterDrink?.Invoke(food.effect);
+
+        }
+        
         RemoveItem(food, 1);
         OnInventoryChanged?.Invoke(slots);
     } public void UseResource(ResourceItem resource)

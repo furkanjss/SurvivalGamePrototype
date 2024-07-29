@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerAnimatorController : MonoBehaviour
 {
+    [SerializeField] private PlayerInventory _playerInventory;
     private PlayerController _playerController;
     private PlayerCombatController _combatController;
     private Animator animator;
@@ -61,4 +62,6 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         animator.Play("Die");
     }
+
+    public void DisableAttack() => _playerInventory.DisableAttack();
 }

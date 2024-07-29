@@ -2,9 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private Button reloadButton;
+    [SerializeField] private GameObject gameOverPanel;
     public static Action OnPlayerDie;
     public GameStatus currentStatus;
     bool isPaused = false;
@@ -24,7 +28,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
+    void Start()
+    {
+       
+            reloadButton.onClick.AddListener(ReloadScene);
+        
+    }
 
+    void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
     void TogglePause()
     {
         print("pause");
@@ -66,20 +81,25 @@ public class GameManager : MonoBehaviour
     {
        OnInventoryPanelOpen += TogglePause;
         OnPlayerDie += GameStatusPlayerDie;
+        OnPlayerDie += GameOverPanel;
         InventoryManager.OnResourceFinish += GameStatusCombatMode;
     } private void OnDisable()
     {
        OnInventoryPanelOpen -= TogglePause;
         OnPlayerDie -= GameStatusPlayerDie;
+        OnPlayerDie -= GameOverPanel;
+
         InventoryManager.OnResourceFinish -= GameStatusCombatMode;
 
     }
+
+    void GameOverPanel() => gameOverPanel.SetActive(true);
 }
 
 public enum GameStatus
 {
-    Normal,   // Oyuncunun silahı yok
-    Combat,   // Oyuncunun silahı var
-    Building, // Oyuncu bir şeyler inşa ediyor
-    Dead      // Oyuncu öldü
+    
+    Combat,   
+    Building, 
+    Dead      
 }

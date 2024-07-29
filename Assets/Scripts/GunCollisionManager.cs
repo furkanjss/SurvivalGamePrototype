@@ -7,7 +7,7 @@ using UnityEngine;
 public class GunCollisionManager : MonoBehaviour
 {
     public float damage;
-    private bool canAttack = false;
+    public bool canAttack = false;
     private PlayerCombatController playerCombatController;
 
     private void Start()
@@ -34,14 +34,7 @@ public class GunCollisionManager : MonoBehaviour
 
     private void AttackOpen()
     {
-        if (!canAttack) 
-        {
-            canAttack = true;
-            DOVirtual.DelayedCall(2, () =>
-            {
-                canAttack = false;
-            });
-        }
+        canAttack = true;
     }
 
 

@@ -110,7 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceHealth: 20
   resourcePartsPrefab: {fileID: 6796636306266650072, guid: f69f9cb8f6fed44c09018664299b3e65, type: 3}
-  dropResourceCount: 2
+  dropResourceCount: 6
 --- !u!136 &2704955980398091126
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+   
+
     private void Update()
     {
         if(GameManager.instance.currentStatus==GameStatus.Dead)return;
@@ -78,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
             IsRunning = Input.GetKey(KeyCode.LeftShift);
             float speed = IsRunning ? runSpeed : walkSpeed;
-            print(speed);
+          
             rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
         }
         else

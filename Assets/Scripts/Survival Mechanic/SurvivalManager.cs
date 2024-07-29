@@ -15,12 +15,14 @@ public class SurvivalManager : MonoBehaviour
     [SerializeField] private SurvivalCanvas _survivalCanvas;
     private float currentHunger;
     private float currentThirst;
+    private float currentHealth;
     public static Action<float> OnFoodEaten;
-    public static Action<float> OnDrinkUsed;
+    public static Action<float> OnWaterDrink;
     private void Start()
     {
         currentHunger = maxHunger;
         currentThirst = maxThirst;
+        currentHealth = maxHealth;
         StartCoroutine(DecaySurvivalStats());
     }
 
@@ -48,44 +50,52 @@ public class SurvivalManager : MonoBehaviour
 
     void SetSlidersValue()
     {
-        _survivalCanvas.SetSlidersValue(currentHunger / maxHunger, currentThirst / maxThirst);
+        _survivalCanvas.SetSlidersValue(currentHunger / maxHunger, currentThirst / maxThirst,currentHealth/maxHealth);
      
     }
     public void Eat(float amount)
     {
         currentHunger += amount;
         currentHunger = Mathf.Clamp(currentHunger, 0, maxHunger);
+        HealthIncrease(amount);
     }
 
     public void Drink(float amount)
     {
+        print("drink");
         currentThirst += amount;
         currentThirst = Mathf.Clamp(currentThirst, 0, maxThirst);
+        HealthIncrease(amount);
+
     }
 
-    public float GetCurrentHunger()
+    void HealthIncrease(float amount)
     {
-        return currentHunger;
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        SetSlidersValue();
     }
-
-    public float GetCurrentThirst()
-    {
-        return currentThirst;
-    }
+ 
 
     public void LoseHealth(float damageAmount)
     {
-        
+        currentHealth -= damageAmount;
+        SetSlidersValue();
+        if (currentHealth<=0)
+        {
+            GameManager.OnPlayerDie?.Invoke();
+
+        }
     }
 
     private void OnEnable()
     {
         OnFoodEaten += Eat;
-        OnDrinkUsed += Drink;
+        OnWaterDrink += Drink;
     }  private void OnDisable()
     {
         OnFoodEaten -= Eat;
-        OnDrinkUsed -= Drink;
+        OnWaterDrink -= Drink;
 
     }
 }

@@ -27,6 +27,7 @@ public class PlayerInventory : MonoBehaviour
             currentTool = null;
         }
 
+        handRigParent.GetComponent<GunCollisionManager>().enabled = false;
         currentTool = Instantiate(toolPrefab, handRigParent);
             Destroy(currentTool.GetComponent<Item>());
         currentTool.transform.localScale = new Vector3(2, 2, 2);
@@ -43,4 +44,23 @@ public class PlayerInventory : MonoBehaviour
     {
         OnSetNewTool -= SetNewTool;
     }
+
+    public void DisableAttack()
+    {
+        GunCollisionManager gunCollisionManager = handRigParent.GetComponent<GunCollisionManager>();
+
+        if (gunCollisionManager != null)
+        {
+            gunCollisionManager.canAttack = false;
+        }
+        else if (currentTool != null)
+        {
+            gunCollisionManager = currentTool.GetComponent<GunCollisionManager>();
+            if (gunCollisionManager != null)
+            {
+                gunCollisionManager.canAttack = false;
+            }
+        }
+    }
+
 }
